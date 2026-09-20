@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Помощник учителя — формативка и анализ оценок</title>
+  <meta name="description" content="Формативное оценивание из темы урока и анализ оценок класса — быстро и без лишней бумажной работы." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app">
+
+    <div class="topbar">
+      <button class="chev-btn" id="sidebarToggle" type="button" title="Свернуть/развернуть меню">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+      <div class="logo-box" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+      </div>
+      <div>
+        <div class="brand-name" data-i18n="brandName">Помощник учителя</div>
+        <div class="brand-sub" data-i18n="brandSub">формативка + анализ оценок</div>
+      </div>
+      <div class="topbar-spacer"></div>
+      <button class="brand-pill" id="howBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.7-2 3.5"/><path d="M12 17h.01"/></svg>
+        <span data-i18n="howBtn">Как это работает</span>
+      </button>
+      <div class="lang-switch">
+        <button class="lang-pill" id="langPillBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>
+          <span id="langPillLabel" data-i18n="langName">Русский</span>
+        </button>
+        <div class="lang-menu" id="langMenu" role="listbox"></div>
+      </div>
+      <button class="key-pill" id="settingsBtn" type="button">
+        <span class="key-dot" id="settingsDot" aria-hidden="true"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        <span id="settingsBtnLabel" data-i18n="settingsBtn">Настройки</span>
+      </button>
+    </div>
+
+    <div class="modal-overlay" id="settingsOverlay" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="modal-head">
+          <h2 id="settingsTitle" data-i18n="settingsTitle">Ключ Anthropic API</h2>
+          <button type="button" class="modal-close" id="settingsClose" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <p class="modal-desc" id="settingsDesc" data-i18n="settingsDesc">
+          Приложению нужен ваш собственный ключ Anthropic API, чтобы генерировать тексты. Он сохраняется только в этом браузере и отправляется исключительно на ваш сервер вместе с запросом — учителю не нужно ничего настраивать на сервере.
+        </p>
+        <div class="field">
+          <label for="settingsKeyInput" data-i18n="apiKeyLabel">Ключ API</label>
+          <input type="password" id="settingsKeyInput" name="apiKey" autocomplete="off" spellcheck="false" data-i18n-ph="apiKeyPh" placeholder="sk-ant-…" />
+        </div>
+        <p class="modal-link">
+          <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" data-i18n="getKeyLink">Получить ключ на console.anthropic.com →</a>
+        </p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="settingsClearBtn" data-i18n="btnClearKey">Удалить ключ</button>
+          <button type="button" class="btn btn-primary" id="settingsSaveBtn" data-i18n="btnSaveKey">Сохранить</button>
+        </div>
+        <p class="modal-note" id="settingsNote" hidden></p>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="howOverlay" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="howTitle">
+        <div class="modal-head">
+          <h2 id="howTitle" data-i18n="howTitle">Как это работает</h2>
+          <button type="button" class="modal-close" id="howClose" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <p class="modal-desc" data-i18n="howStep1">1) Вкладка «Формативка» — опишите предмет, класс и тему, нажмите «Сгенерировать». Скачайте готовый документ в .docx и распечатайте.</p>
+        <p class="modal-desc" data-i18n="howStep2">2) Вкладка «Анализ оценок» — вставьте таблицу или загрузите файл (ученик / задания / оценки), нажмите «Проанализировать». ИИ покажет, над чем поработать каждому ученику и какие темы стоит повторить всему классу.</p>
+        <p class="modal-desc" data-i18n="howStep3">Тексты создаёт модель Claude по вашему собственному ключу Anthropic API — он не хранится на сервере.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-primary" id="howOk" data-i18n="howOk">Понятно</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="body-row">
+      <aside class="sidebar" id="sidebar">
+        <button type="button" class="side-btn active" data-tab-shortcut="formativka" title="Формативка">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+        </button>
+        <button type="button" class="side-btn" data-tab-shortcut="analysis" title="Анализ оценок">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3"/><path d="M12 10v8"/><path d="M17 6v12"/></svg>
+        </button>
+        <div class="side-sep"></div>
+        <button type="button" class="side-btn ghost" title="Расписание" tabindex="-1" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </button>
+        <button type="button" class="side-btn ghost" title="Сообщения" tabindex="-1" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+        </button>
+      </aside>
+
+      <main class="main">
+
+        <div class="tip-banner">
+          <div class="tip-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="tip-text">
+            <b data-i18n="tipBannerBold">Работает через ваш ключ Anthropic API.</b>
+            <span data-i18n="tipBannerText">Ключ хранится только в этом браузере и отправляется вместе с запросом — на сервере ничего не сохраняется.</span>
+          </div>
+        </div>
+
+        <div class="page-head">
+          <h1 id="pageTitle">Формативка из темы урока</h1>
+          <p id="pageSub">Опишите тему — получите готовое формативное оценивание для печати.</p>
+        </div>
+
+        <div class="tabbar" role="tablist" aria-label="Инструменты">
+          <button type="button" class="tab-btn active" role="tab" aria-selected="true" data-tab-target="formativka">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+            <span data-i18n="tabFormativka">Формативка</span>
+          </button>
+          <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab-target="analysis">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3"/><path d="M12 10v8"/><path d="M17 6v12"/></svg>
+            <span data-i18n="tabAnalysis">Анализ оценок</span>
+          </button>
+        </div>
+
+        <!-- ===================== Формативка ===================== -->
+        <section id="panel-formativka" class="panel active" tabindex="-1">
+          <div class="card">
+            <div class="grid2">
+              <div>
+                <form novalidate>
+                  <div class="row2">
+                    <div class="field">
+                      <label for="formSubject" data-i18n="fieldSubject">Предмет</label>
+                      <input type="text" id="formSubject" name="subject" data-i18n-ph="fieldSubjectPh" placeholder="Например: биология" maxlength="200" required />
+                    </div>
+                    <div class="field">
+                      <label for="formGrade" data-i18n="fieldGrade">Класс</label>
+                      <select id="formGrade" name="grade" required>
+                        <option value="" disabled selected data-i18n="fieldGradePlaceholder">Выберите класс</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="formTopic" data-i18n="fieldTopic">Тема урока</label>
+                    <textarea id="formTopic" name="topic" maxlength="800" required
+                      data-i18n-ph="fieldTopicPh"
+                      placeholder="Например: фотосинтез — процесс, значение для растений и экосистемы"></textarea>
+                    <span class="field-counter" id="formTopicCount">0 / 800</span>
+                  </div>
+
+                  <div class="field">
+                    <label for="formCount" data-i18n="fieldCount">Количество заданий</label>
+                    <input type="number" id="formCount" name="count" min="1" max="20" value="5" required style="max-width:160px" />
+                  </div>
+
+                  <div class="field">
+                    <label for="formNotes" data-i18n="fieldNotes">Комментарий (необязательно)</label>
+                    <textarea id="formNotes" name="notes" maxlength="500"
+                      data-i18n-ph="fieldNotesPh"
+                      placeholder="Особенности класса, на что сделать упор, формат заданий и т. п."></textarea>
+                    <span class="field-counter" id="formNotesCount">0 / 500</span>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary btn-block" data-role="submit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 4.9L5 9.8l4.1 2.9L7.6 18 12 15l4.4 3-1.5-5.3L19 9.8l-6.1-1.9L12 3Z"/></svg>
+                    <span data-role="submit-label" data-i18n="btnGenerate">Сгенерировать</span>
+                  </button>
+                  <div class="status-line">
+                    <span class="spinner" data-role="spinner" hidden aria-hidden="true"></span>
+                  </div>
+                  <p class="error-banner" data-role="error" hidden></p>
+                </form>
+              </div>
+
+              <div>
+                <p class="section-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+                  <span data-i18n="sectionPreview">Предпросмотр</span>
+                </p>
+                <div class="preview-shell">
+                  <div class="preview-empty" data-role="empty">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+                    <span data-i18n="emptyFormativka">Заполните форму слева и нажмите «Сгенерировать» — здесь появится готовая формативка.</span>
+                  </div>
+                  <article class="doc" data-role="result" hidden></article>
+                </div>
+                <div class="actions-row">
+                  <button type="button" class="btn btn-outline" data-role="download" hidden disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                    <span data-i18n="btnDownload">Скачать .docx</span>
+                  </button>
+                  <button type="button" class="btn btn-ghost" data-role="regenerate" hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+                    <span data-i18n="btnRegenerate">Сгенерировать заново</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== Анализ оценок ===================== -->
+        <section id="panel-analysis" class="panel" tabindex="-1">
+          <div class="card">
+            <div class="grid2">
+              <div>
+                <form novalidate>
+                  <div class="field">
+                    <label for="analysisTable" data-i18n="fieldTable">Таблица с оценками</label>
+
+                    <div class="dropzone" id="analysisDropzone">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+                      <div class="dz-title" data-i18n="dzTitle">Загрузите файл или перетащите сюда</div>
+                      <div class="dz-sub" data-i18n="dzSub">.xlsx, .xls или .csv — заполнит таблицу ниже автоматически</div>
+                      <input type="file" id="analysisFileInput" accept=".xlsx,.xls,.csv" style="display:none" />
+                    </div>
+                    <div id="analysisFileChipWrap"></div>
+
+                    <span class="hint" data-i18n="tableHint">
+                      Скопируйте диапазон из Excel или Google Таблиц и вставьте сюда (первая строка — заголовки: имя ученика, оценки по заданиям и т. п.).
+                    </span>
+                    <textarea id="analysisTable" name="table" class="mono" required
+                      data-i18n-ph="tablePh"
+                      placeholder="Ученик&#9;Задание 1&#9;Задание 2&#9;Задание 3
+Иванов А.&#9;4&#9;5&#9;3
+Петрова М.&#9;5&#9;5&#9;5"></textarea>
+                    <span class="hint" id="analysisPreview"></span>
+                    <div id="analysisTablePreview"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="analysisNotes" data-i18n="fieldNotes">Комментарий (необязательно)</label>
+                    <textarea id="analysisNotes" name="notes" maxlength="500"
+                      data-i18n-ph="fieldNotesPh"
+                      placeholder="Контекст: тема контрольной, что уже разбирали на уроке и т. п."></textarea>
+                    <span class="field-counter" id="analysisNotesCount">0 / 500</span>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary btn-block" data-role="submit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 4.9L5 9.8l4.1 2.9L7.6 18 12 15l4.4 3-1.5-5.3L19 9.8l-6.1-1.9L12 3Z"/></svg>
+                    <span data-role="submit-label" data-i18n="btnAnalyze">Проанализировать</span>
+                  </button>
+                  <div class="status-line">
+                    <span class="spinner" data-role="spinner" hidden aria-hidden="true"></span>
+                  </div>
+                  <p class="error-banner" data-role="error" hidden></p>
+                </form>
+              </div>
+
+              <div>
+                <p class="section-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3"/><path d="M12 10v8"/><path d="M17 6v12"/></svg>
+                  <span data-i18n="sectionOverview">Обзор от ИИ</span>
+                </p>
+                <div class="preview-shell">
+                  <div class="preview-empty" data-role="empty">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3M12 10v8M17 6v12"/></svg>
+                    <span data-i18n="emptyAnalysis">Вставьте таблицу и нажмите «Проанализировать» — здесь появится разбор по классу и по каждому ученику.</span>
+                  </div>
+                  <article class="doc" data-role="result" hidden></article>
+                </div>
+                <div class="actions-row">
+                  <button type="button" class="btn btn-outline" data-role="download" hidden disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                    <span data-i18n="btnDownload">Скачать .docx</span>
+                  </button>
+                  <button type="button" class="btn btn-ghost" data-role="regenerate" hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+                    <span data-i18n="btnRegenerate">Сгенерировать заново</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="foot" data-i18n="footer">Формативка и анализ оценок · черновик, который стоит перепроверить перед печатью</footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="/i18n.js"></script>
+  <script src="/config.js"></script>
+  <script src="/settings.js"></script>
+  <script src="/api-client.js"></script>
+  <script src="/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
+  <script src="/docx-export.js"></script>
+  <script src="/tabs.js"></script>
+  <script src="/app.js"></script>
+  <script src="/table-upload.js"></script>
+  <script src="/ui-extras.js"></script>
+</body>
+</html>
