@@ -3,16 +3,6 @@
 window.TA = window.TA || {};
 
 (function (TA) {
-  function initSidebarToggle() {
-    const btn = document.getElementById('sidebarToggle');
-    const sidebar = document.getElementById('sidebar');
-    if (!btn || !sidebar) return;
-    btn.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      btn.classList.toggle('is-flipped');
-    });
-  }
-
   function initHowModal() {
     const btn = document.getElementById('howBtn');
     const overlay = document.getElementById('howOverlay');
@@ -50,7 +40,6 @@ window.TA = window.TA || {};
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    initSidebarToggle();
     initHowModal();
     initRegenerateButtons();
   });

@@ -12,7 +12,6 @@ window.TA = window.TA || {};
 
   function init() {
     var tabButtons = Array.from(document.querySelectorAll('[data-tab-target]'));
-    var sideButtons = Array.from(document.querySelectorAll('[data-tab-shortcut]'));
     var panels = {
       formativka: document.getElementById('panel-formativka'),
       analysis: document.getElementById('panel-analysis'),
@@ -33,9 +32,6 @@ window.TA = window.TA || {};
         btn.classList.toggle('active', isActive);
         btn.setAttribute('aria-selected', String(isActive));
         btn.tabIndex = isActive ? 0 : -1;
-      });
-      sideButtons.forEach(function (btn) {
-        btn.classList.toggle('active', btn.dataset.tabShortcut === tabId);
       });
       Object.keys(panels).forEach(function (id) {
         var isActive = id === tabId;
@@ -58,9 +54,6 @@ window.TA = window.TA || {};
           activate(tabButtons[next].dataset.tabTarget);
         }
       });
-    });
-    sideButtons.forEach(function (btn) {
-      btn.addEventListener('click', function () { activate(btn.dataset.tabShortcut); });
     });
 
     TA.i18n.onChange(applyTexts);

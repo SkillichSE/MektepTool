@@ -3,7 +3,7 @@
 
 window.APP_CONFIG = {
   apiBaseUrl: '',
-  requestTimeoutMs: 45000,
+  requestTimeoutMs: 90000,
   limits: {
     topicMax: 800,
     notesMax: 500,

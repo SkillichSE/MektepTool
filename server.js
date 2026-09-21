@@ -42,7 +42,7 @@ app.use(
       if (!origin || env.allowedOrigins.length === 0 || env.allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      return callback(new Error('CORS: домен не разрешён'));
+      return callback(new HttpError(403, t().corsForbidden, 'cors_forbidden'));
     },
   })
 );
